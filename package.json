@@ -1,1 +1,18 @@
-{"name":"league-friends","private":true,"version":"2.0.0","type":"module","description":"Dashboard estático de demonstração","scripts":{"start":"http-server . -a 127.0.0.1 -p 4173 -c-1","test":"node --test tests/*.test.js","test:e2e":"playwright test","qa":"npm run test && npm run test:e2e"},"devDependencies":{"@playwright/test":"^1.56.0","http-server":"^14.1.1"}}
+{
+  "name": "league-friends",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Dashboard estático de demonstração",
+  "scripts": {
+    "start": "http-server . -a 127.0.0.1 -p 4173 -c-1",
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "playwright test",
+    "qa": "npm run test && npm run test:e2e && npm run audit:visual",
+    "audit:visual": "node scripts/visual-audit.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "http-server": "^14.1.1"
+  }
+}

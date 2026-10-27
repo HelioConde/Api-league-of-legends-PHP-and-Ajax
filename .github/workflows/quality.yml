@@ -4,6 +4,7 @@ on:
     branches: [main, "feat/**"]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -27,6 +28,17 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - name: Capturar e auditar todas as páginas em cinco resoluções
+        if: always()
+        run: npm run audit:visual
+      - name: Enviar capturas completas e diagnósticos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: league-friends-visual-audit
+          path: artifacts/visual-audit/
+          if-no-files-found: warn
+          retention-days: 14
       - name: Evidencias
         if: always()
         uses: actions/upload-artifact@v4

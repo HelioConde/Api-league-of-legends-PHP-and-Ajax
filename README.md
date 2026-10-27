@@ -59,3 +59,17 @@ O código PHP e os scripts legados permanecem preservados no repositório para f
 O armazenamento é apenas local ao navegador; nenhuma conta ou sincronização é fornecida. A futura consulta a dados reais exigirá uma função serverless segura para guardar o token da Riot e respeitar as políticas e limites da API.
 
 Projeto independente, sem vínculo oficial com a Riot Games. Desenvolvido por [Hélio Conde](https://github.com/HelioConde).
+
+## Auditoria visual automática (Playwright)
+
+A cada push e pull request, o GitHub Actions fotografa **as 6 seções** da aplicação em **360, 390, 768, 1280 e 1600 px** (30 capturas de página inteira). Também registra erros JavaScript, respostas HTTP com falha, imagens quebradas, elementos fora da tela, sobreposições e transbordamento horizontal.
+
+Execute localmente:
+
+~~~bash
+npm install
+npx playwright install chromium
+npm run audit:visual
+~~~
+
+O resultado fica em `artifacts/visual-audit/REPORT.md`, `diagnostics.json` e subpastas PNG por largura. No GitHub, abra **Actions → League Friends - testes → execução → Artifacts → league-friends-visual-audit**. Leia [o guia detalhado](docs/VISUAL_AUDIT.md) antes de comparar capturas.
