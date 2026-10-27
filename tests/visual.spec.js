@@ -43,6 +43,14 @@ test.describe("QA Visual - 30 capturas completas",()=>{
       const layoutProblems=await page.evaluate(()=>{
         const issues=[],width=window.innerWidth,root=document.documentElement;
         if(root.scrollWidth>width+2)issues.push("Overflow horizontal: "+root.scrollWidth+"px > "+width+"px");
+        const nav=document.querySelector(".mobile-nav");
+        if(nav&&getComputedStyle(nav).display!=="none"){
+          if(nav.scrollWidth>nav.clientWidth+2)issues.push("Menu mobile cortado: "+nav.scrollWidth+"/"+nav.clientWidth);
+          for(const item of nav.querySelectorAll("button")){
+            const r=item.getBoundingClientRect();
+            if(r.left < -2||r.right>width+2)issues.push("Botão de navegação fora da tela: "+item.textContent.trim());
+          }
+        }
         for(const el of document.querySelectorAll("main,.panel,.section-panel,.search-banner,.overview-layout,.match-row,.friend-grid,.compare-grid,.gallery-stage,.settings-grid")){
           if(el.getClientRects().length===0||el.closest("[hidden]"))continue;
           const style=getComputedStyle(el);
