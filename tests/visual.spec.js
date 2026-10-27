@@ -43,6 +43,17 @@ test.describe("QA Visual - 30 capturas completas",()=>{
       const layoutProblems=await page.evaluate(()=>{
         const issues=[],width=window.innerWidth,root=document.documentElement;
         if(root.scrollWidth>width+2)issues.push("Overflow horizontal: "+root.scrollWidth+"px > "+width+"px");
+        // Uma nav com overflow-x:auto pode esconder botões sem aumentar a largura do documento.
+        const mobileNav=document.querySelector(".mobile-nav");
+        if(mobileNav&&getComputedStyle(mobileNav).display!=="none"){
+          if(mobileNav.scrollWidth>mobileNav.clientWidth+2)
+            issues.push("Menu mobile requer rolagem horizontal: "+mobileNav.scrollWidth+"/"+mobileNav.clientWidth);
+          for(const button of mobileNav.querySelectorAll("button")){
+            const r=button.getBoundingClientRect();
+            if(r.width>0&&(r.left < -2||r.right > width+2))
+              issues.push("Botão de navegação oculto: "+button.textContent.trim());
+          }
+        }
         for(const el of document.querySelectorAll("main,.panel,.section-panel,.search-banner,.overview-layout,.match-row,.friend-grid,.compare-grid,.gallery-stage,.settings-grid")){
           if(el.getClientRects().length===0||el.closest("[hidden]"))continue;
           const style=getComputedStyle(el);
