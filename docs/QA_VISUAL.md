@@ -30,3 +30,6 @@ O Playwright também reprova menus de navegação que tenham conteúdo horizonta
 - Importação utiliza apenas um controle de arquivo visual, acessível por teclado.
 - Mensagens de operações antigas são limpas ao mudar de seção.
 - Inclusa viewport 1366×645 nos testes, que aproxima a área de conteúdo das capturas enviadas.
+
+## Ajuste após as 48 capturas
+A galeria usa um cenário desfocado derivado da arte atual atrás da imagem principal (preservada com `object-fit: contain`). A cada avanço, a mesma arte atualiza o fundo. Isso elimina as laterais vazias sem cortar personagens ou ampliar demais a página.

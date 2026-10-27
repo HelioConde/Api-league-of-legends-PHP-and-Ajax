@@ -117,3 +117,12 @@ test("importação tem um único seletor visível e acessível",async ({page})=>
   await expect(page.locator('#import-data')).toHaveCount(1);
   await expect(page.locator('#import-filename')).toContainText("Nenhum arquivo selecionado");
 });
+
+test("galeria acompanha a imagem central com fundo temático sincronizado",async ({page})=>{
+  await page.locator('[data-section="gallery"]:visible').first().click();
+  const scene=async()=>page.evaluate(()=>getComputedStyle(document.querySelector(".gallery-stage"),"::before").backgroundImage);
+  expect(await scene()).toContain("1.jpg");
+  await page.locator("#gallery-next").click();
+  expect(await scene()).toContain("2.jpg");
+  await expect(page.locator("#gallery-count")).toHaveText("2 de 6");
+});

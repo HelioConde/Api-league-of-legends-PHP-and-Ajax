@@ -186,3 +186,17 @@ main{width:100%;max-width:1480px;margin:0 auto;flex:1;padding:25px clamp(18px,3.
   .workspace.is-secondary .gallery-stage{height:clamp(210px,42dvh,380px)}
   .gallery-controls{top:8px;right:8px}
 }
+
+/* A arte do carrossel ocupa o palco com um cenário desfocado e mantém
+   a imagem inteira e nítida no centro, sem faixas vazias. */
+.gallery-stage{isolation:isolate}
+.gallery-stage::before{
+  content:"";position:absolute;inset:-24px;z-index:0;
+  background-image:linear-gradient(rgba(8,15,26,.36),rgba(8,15,26,.36)),var(--gallery-bg);
+  background-size:cover;background-position:center;
+  filter:blur(22px) saturate(.85);
+  transform:scale(1.05);
+  pointer-events:none;
+}
+.gallery-stage>img{position:relative;z-index:1;background:transparent}
+.gallery-stage>.gallery-controls{z-index:2}
