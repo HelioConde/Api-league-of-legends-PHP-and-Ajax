@@ -1,53 +1,119 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>League Friends</title>
-    <script src="js/X-Riot-version.js   "></script>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/all.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f1a">
+  <meta name="description" content="League Friends: explore perfis e partidas demonstrativas, mantenha sua lista local de amigos e compare jogadores. Funciona no GitHub Pages.">
+  <title>League Friends | Painel de Invocadores</title>
+  <link rel="icon" href="./img/logo.png" type="image/png">
+  <link rel="stylesheet" href="./css/tokens.css">
+  <link rel="stylesheet" href="./css/dashboard.css">
+  <script type="module" src="./js/app.js"></script>
 </head>
-
 <body>
-    <header>
-    </header>
-    <main>
-        <div id="main">
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a class="brand" href="./" aria-label="League Friends — início">
+        <span class="brand-symbol" aria-hidden="true">L<span>F</span></span>
+        <span><strong>League Friends</strong><small>PAINEL DE JOGADORES</small></span>
+      </a>
+      <p class="nav-caption">EXPLORAR</p>
+      <nav class="nav-list" aria-label="Seções do aplicativo">
+        <button class="nav-button is-active" type="button" data-section="overview" aria-current="page"><span aria-hidden="true">⌂</span> Visão geral</button>
+        <button class="nav-button" type="button" data-section="matches"><span aria-hidden="true">▤</span> Partidas</button>
+        <button class="nav-button" type="button" data-section="friends"><span aria-hidden="true">♡</span> Amigos</button>
+        <button class="nav-button" type="button" data-section="compare"><span aria-hidden="true">⇄</span> Comparar</button>
+        <button class="nav-button" type="button" data-section="gallery"><span aria-hidden="true">▧</span> Galeria</button>
+        <button class="nav-button" type="button" data-section="settings"><span aria-hidden="true">⚙</span> Dados locais</button>
+      </nav>
+      <div class="sidebar-note"><strong>100% estático</strong><p>Nenhum login, banco de dados ou chave da Riot. Os números apresentados são fictícios.</p></div>
+    </aside>
 
-        </div>
-        <div id="loadingP">
-            <div class="lds-facebook">
-                <div></div>
-                <div></div>
-                <div></div>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="mobile-brand"><strong>League Friends</strong><span>DEMO</span></div>
+        <div class="topbar-title"><span class="eyebrow">SEU ESPAÇO NO RIFT</span><h1 id="page-title">Visão geral</h1></div>
+        <span class="status-pill" title="Dados de demonstração, não são estatísticas em tempo real"><span aria-hidden="true" class="status-dot"></span> Modo demonstração</span>
+      </header>
+      <nav class="mobile-nav" aria-label="Seções no celular">
+        <button type="button" data-section="overview" aria-current="page">Início</button>
+        <button type="button" data-section="matches">Partidas</button>
+        <button type="button" data-section="friends">Amigos</button>
+        <button type="button" data-section="compare">Comparar</button>
+        <button type="button" data-section="gallery">Galeria</button>
+        <button type="button" data-section="settings">Dados</button>
+      </nav>
+
+      <main id="main-content" tabindex="-1">
+        <section class="search-banner" aria-labelledby="search-title">
+          <div class="search-copy">
+            <span class="eyebrow">LEAGUE FRIENDS / DEMONSTRAÇÃO</span>
+            <h2 id="search-title">Encontre seu próximo <em>duo.</em></h2>
+            <p>Explore jogadores de exemplo ou crie sua lista pessoal. Nenhuma pesquisa consulta a API da Riot.</p>
+          </div>
+          <form id="search-form" class="search-form">
+            <label for="riot-id">Riot ID</label>
+            <div class="search-field"><input id="riot-id" name="riotId" type="text" placeholder="AlchemyFlames#BR1" autocomplete="off" maxlength="24" aria-describedby="search-help" required><button type="submit">Pesquisar <span aria-hidden="true">↗</span></button></div>
+            <small id="search-help">Exemplos: AlchemyFlames#BR1, AhriMain#BR1, JunglePath#BR1</small>
+          </form>
+        </section>
+
+        <div class="notice" role="note"><span aria-hidden="true">ⓘ</span> <span><strong>Dados fictícios.</strong> Perfis, partidas, elo e campeões foram criados para testar a interface e não representam jogadores reais.</span></div>
+        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+
+        <section id="panel-overview" class="section-panel" aria-labelledby="overview-heading">
+          <h2 id="overview-heading" class="sr-only">Visão geral do jogador</h2>
+          <div class="overview-layout">
+            <article class="panel profile-panel">
+              <div class="panel-top"><span class="eyebrow">PERFIL SELECIONADO</span><span class="mini-chip">DEMONSTRAÇÃO</span></div>
+              <div id="profile-card"></div>
+            </article>
+            <div class="overview-side">
+              <section class="panel stats-panel" aria-labelledby="stats-heading"><div class="panel-top"><h3 id="stats-heading">Resumo de desempenho</h3><span class="muted" id="stats-label">Partidas de exemplo</span></div><div id="stats-grid" class="stats-grid"></div></section>
+              <section class="panel recent-panel" aria-labelledby="recent-heading"><div class="panel-top"><h3 id="recent-heading">Partidas recentes</h3><button type="button" class="text-action" data-go="matches">Ver histórico completo →</button></div><div id="recent-matches"></div></section>
             </div>
-        </div>
-    </main>
-    <nav>
-        <div id="nav">
-        </div>
-        <div class="AMG">
-        </div>
-    </nav>
-    <main>
-        <div id="loading">
-            <div class="lds-facebook">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-        <div id="mainA">
-        </div>
-    </main>
-    <footer>
-        <p>Todos os direitos reservados Copyright © 2018 - Francisco Hélio</p>
-    </footer>
+          </div>
+        </section>
+
+        <section id="panel-matches" class="section-panel" aria-labelledby="matches-heading" hidden>
+          <div class="section-heading"><div><span class="eyebrow">HISTÓRICO</span><h2 id="matches-heading">Partidas de demonstração</h2><p>Resultados fictícios do perfil selecionado.</p></div><div class="filters"><label for="match-filter">Resultado</label><select id="match-filter"><option value="all">Todas</option><option value="win">Vitórias</option><option value="loss">Derrotas</option></select><label for="champion-filter">Campeão</label><select id="champion-filter"><option value="all">Todos</option></select></div></div>
+          <div class="panel list-panel" id="full-matches"></div>
+        </section>
+
+        <section id="panel-friends" class="section-panel" aria-labelledby="friends-heading" hidden>
+          <div class="section-heading"><div><span class="eyebrow">SUA LISTA</span><h2 id="friends-heading">Amigos salvos</h2><p>Os Riot IDs ficam guardados apenas neste navegador.</p></div></div>
+          <form id="friend-form" class="inline-form panel"><label for="friend-id">Adicionar Riot ID</label><div class="inline-fields"><input id="friend-id" placeholder="Jogador#BR1" maxlength="24" required><button type="submit">Adicionar amigo</button></div></form>
+          <div id="friend-list" class="friend-grid"></div>
+        </section>
+
+        <section id="panel-compare" class="section-panel" aria-labelledby="compare-heading" hidden>
+          <div class="section-heading"><div><span class="eyebrow">DUO ANALYTICS</span><h2 id="compare-heading">Compare jogadores</h2><p>As estatísticas pertencem somente aos perfis demonstrativos.</p></div></div>
+          <div class="compare-controls panel"><label for="compare-a">Jogador 1</label><select id="compare-a"></select><span aria-hidden="true" class="versus">VS</span><label for="compare-b">Jogador 2</label><select id="compare-b"></select></div>
+          <div id="compare-output" class="compare-grid"></div>
+        </section>
+
+        <section id="panel-gallery" class="section-panel" aria-labelledby="gallery-heading" hidden>
+          <div class="section-heading"><div><span class="eyebrow">ARTE E ATMOSFERA</span><h2 id="gallery-heading">Galeria</h2><p>Imagens históricas preservadas do projeto original.</p></div></div>
+          <div class="panel gallery-panel" id="gallery-widget" tabindex="0" aria-label="Galeria de imagens; use as setas esquerda e direita">
+            <div class="gallery-stage"><img id="gallery-image" src="./img/1.jpg" alt="Arte temática 1 de 6"><div class="gallery-controls"><button type="button" id="gallery-prev" aria-label="Imagem anterior">←</button><span id="gallery-count" aria-live="polite">1 de 6</span><button type="button" id="gallery-next" aria-label="Próxima imagem">→</button></div></div>
+            <div id="gallery-dots" class="gallery-dots" aria-label="Selecionar imagem"></div>
+          </div>
+        </section>
+
+        <section id="panel-settings" class="section-panel" aria-labelledby="settings-heading" hidden>
+          <div class="section-heading"><div><span class="eyebrow">PRIVACIDADE E BACKUP</span><h2 id="settings-heading">Dados locais</h2><p>Exporte sua lista de amigos e preferências, ou restaure um backup JSON.</p></div></div>
+          <div class="settings-grid">
+            <article class="panel settings-card"><h3>Exportar</h3><p>Baixe um arquivo JSON contendo somente suas escolhas e lista local de amigos.</p><button type="button" id="export-data">Baixar backup JSON</button></article>
+            <article class="panel settings-card"><h3>Importar</h3><p>Escolha um backup desta aplicação. A importação substitui os dados locais atuais.</p><label class="file-label" for="import-data">Escolher arquivo JSON</label><input id="import-data" type="file" accept="application/json,.json"><span id="import-filename" class="muted"></span></article>
+            <article class="panel settings-card"><h3>Restaurar</h3><p>Limpe os amigos e favoritos. Os exemplos continuarão disponíveis.</p><button type="button" class="danger-button" id="reset-data">Limpar dados locais</button></article>
+          </div>
+        </section>
+      </main>
+      <footer class="footer"><span>League Friends · Projeto independente · Não afiliado à Riot Games.</span><span>Feito por Hélio Conde · <a href="https://github.com/HelioConde/Api-league-of-legends-PHP-and-Ajax" target="_blank" rel="noopener noreferrer">Código no GitHub</a></span></footer>
+    </div>
+  </div>
+  <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title"><form method="dialog"><h2 id="confirm-title">Limpar dados locais?</h2><p>Esta ação apaga seus amigos, favoritos e seleção. Não é possível desfazer sem um backup.</p><div class="dialog-actions"><button value="cancel" type="submit" autofocus>Cancelar</button><button value="confirm" type="submit" class="danger-button">Limpar</button></div></form></dialog>
 </body>
-<script src="js/script.js"></script>
-
 </html>

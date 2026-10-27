@@ -1,47 +1,61 @@
-<div align="center">
-  <h1>🎮 League Friends — Riot API com PHP e AJAX</h1>
-  <p><strong>Estudo de integração com dados de League of Legends usando PHP, JavaScript e chamadas HTTP.</strong></p>
-  <p><img alt="PHP" src="https://img.shields.io/badge/PHP-Backend-777BB4?logo=php&logoColor=white"> <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript%20%2B%20AJAX-Frontend-F7DF1E?logo=javascript&logoColor=black"> <img alt="Status" src="https://img.shields.io/badge/status-legado-64748b"></p>
-</div>
+# League Friends — Dashboard estático de League of Legends
 
-## Objetivo
+Versão modernizada e responsiva de um experimento histórico com PHP e AJAX. Agora o painel funciona no GitHub Pages, sem backend, sem banco de dados e sem chave da Riot.
 
-O projeto explora como apresentar informações de League of Legends em uma interface web e consultar serviços externos por meio de requisições AJAX. A entrada HTML histórica usa o título **League Friends** e a pasta `php/` reúne implementações relacionadas à API Riot e cache.
+**Atenção:** todos os perfis, ranks, estatísticas e partidas de demonstração são fictícios. Não se trata de um serviço de acompanhamento em tempo real.
 
-**Estado:** exercício antigo. Rotas, versões de endpoints e autenticação devem ser revalidadas antes de qualquer teste com a API atual.
+## Funcionalidades
+- Pesquisa de Riot ID no formato Nome#TAG e navegação por perfis de exemplo.
+- Perfil com elo, nível, campeão favorito e resumo das partidas ilustrativas.
+- Filtro de partidas por vitória, derrota e campeão.
+- Lista local de amigos: adicionar, editar, excluir, selecionar e favoritar.
+- Comparação lado a lado entre jogadores, sem inventar valores para IDs desconhecidos.
+- Importação, exportação e limpeza de dados locais via JSON.
+- Galeria acessível por teclado; layout para celular e movimento reduzido.
+
+## GitHub Pages
+Endereço planejado após deploy da branch main:
+
+https://helioconde.github.io/Api-league-of-legends-PHP-and-Ajax/
+
+Caso a publicação ainda esteja desabilitada, entrar em Settings → Pages → Build and deployment → Source e selecionar **GitHub Actions**. O workflow de publicação fica em .github/workflows/deploy.yml.
+
+Não existe build do app: apenas arquivos estáticos com caminhos relativos.
+
+## Iniciar localmente
+
+~~~bash
+npm install
+npm start
+~~~
+
+Abrir http://127.0.0.1:4173
+
+## Testes
+
+~~~bash
+npm test
+npx playwright install chromium
+npm run test:e2e
+~~~
+
+O workflow .github/workflows/quality.yml executa Node.js e Playwright no GitHub Actions.
 
 ## Estrutura
+- index.html: interface e semântica
+- css/tokens.css + css/dashboard.css: identidade visual e responsividade
+- js/app.js: navegação e interações
+- js/core.js: validação e estatísticas
+- js/data/demo.js: dados fictícios
+- js/services/players.js: provedor de perfis
+- js/storage/store.js: persistência e backups
+- docs/DESIGN_SYSTEM.md: guia de UI
+- docs/ARCHITECTURE.md: decisões técnicas e limitações
+- tests/: verificações unitárias e E2E
 
-| Caminho | Função |
-| --- | --- |
-| `index.html` | Interface League Friends |
-| `index.php` | Entrada da parte PHP |
-| `php/php-riot-api.php` | Código de integração histórico |
-| `php/summoner.php` | Consulta de invocador (API legada) |
-| `php/FileSystemCache.php` | Cache em arquivos |
-| `js/`, `css/` | Scripts e estilos |
-| `view/`, `img/`, `iconIMG/` | Páginas e mídia |
+## Origem e limites
+O código PHP e os scripts legados permanecem preservados no repositório para fins históricos, mas não integram a interface publicada. O GitHub Pages não executa PHP.
 
-## Executar e estudar
+O armazenamento é apenas local ao navegador; nenhuma conta ou sincronização é fornecida. A futura consulta a dados reais exigirá uma função serverless segura para guardar o token da Riot e respeitar as políticas e limites da API.
 
-Para abrir as rotas PHP localmente, use **PHP instalado** e sirva a raiz do repositório:
-
-```bash
-git clone https://github.com/HelioConde/Api-league-of-legends-PHP-and-Ajax.git
-cd Api-league-of-legends-PHP-and-Ajax
-php -S 127.0.0.1:8000
-```
-
-Acesse `http://127.0.0.1:8000`.
-
-> Não é garantido que consultas Riot funcionem sem adaptação. Antes de chamar a API, revise os endpoints e as regras de autenticação na [documentação oficial](https://developer.riotgames.com/).
-
-## Cuidados antes de retomar
-
-- **Nunca publique uma Riot API key** em JavaScript público, arquivos versionados, screenshots ou logs.
-- O projeto histórico possui arquivos JavaScript relacionados a tokens/versões. **Audite-os e revogue quaisquer credenciais antigas expostas**, caso ainda existam.
-- Use backend autenticado ou função de servidor para chamar a Riot; limite requisições e trate erros `401`, `403`, `404` e `429`.
-- Revise cache, permissões de escrita e validação dos parâmetros recebidos.
-- Dados de invocador e regiões mudaram ao longo do tempo: migre somente depois de consultar os endpoints disponíveis hoje.
-
-Este é um projeto independente, sem afiliação oficial com Riot Games. Desenvolvido por [Hélio Conde](https://github.com/HelioConde).
+Projeto independente, sem vínculo oficial com a Riot Games. Desenvolvido por [Hélio Conde](https://github.com/HelioConde).

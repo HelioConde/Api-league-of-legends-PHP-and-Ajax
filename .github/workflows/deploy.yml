@@ -1,0 +1,37 @@
+name: Publicar League Friends no GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    name: Deploy estatico
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Preparar arquivos sem PHP e sem JavaScript legado
+        run: |
+          mkdir -p _site/css _site/js/data _site/js/services _site/js/storage
+          cp index.html .nojekyll _site/
+          cp css/tokens.css css/dashboard.css _site/css/
+          cp js/app.js js/core.js _site/js/
+          cp js/data/demo.js _site/js/data/
+          cp js/services/players.js _site/js/services/
+          cp js/storage/store.js _site/js/storage/
+          cp -R img iconIMG _site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
