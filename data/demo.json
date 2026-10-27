@@ -1,0 +1,50 @@
+{
+  "notice": "PARTIDAS FICTÍCIAS — DEMONSTRAÇÃO, NÃO SÃO DADOS REAIS",
+  "matches": [
+    {
+      "champion": "Ahri",
+      "mode": "Ranqueada Solo",
+      "result": "Vitória",
+      "kills": 11,
+      "deaths": 3,
+      "assists": 12,
+      "duration": "31:24"
+    },
+    {
+      "champion": "Jinx",
+      "mode": "Normal Draft",
+      "result": "Derrota",
+      "kills": 5,
+      "deaths": 8,
+      "assists": 7,
+      "duration": "29:18"
+    },
+    {
+      "champion": "Lux",
+      "mode": "ARAM",
+      "result": "Vitória",
+      "kills": 7,
+      "deaths": 4,
+      "assists": 23,
+      "duration": "22:46"
+    },
+    {
+      "champion": "Garen",
+      "mode": "Ranqueada Flex",
+      "result": "Vitória",
+      "kills": 9,
+      "deaths": 5,
+      "assists": 6,
+      "duration": "34:10"
+    },
+    {
+      "champion": "Ashe",
+      "mode": "Normal Draft",
+      "result": "Derrota",
+      "kills": 4,
+      "deaths": 7,
+      "assists": 14,
+      "duration": "28:54"
+    }
+  ]
+}

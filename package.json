@@ -1,0 +1,18 @@
+{
+  "name": "league-friends-pages",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/unit.test.js",
+    "test:e2e": "playwright test",
+    "check": "npm run test && npm run build"
+  },
+  "devDependencies": {
+    "vite": "^7.3.0",
+    "@playwright/test": "^1.58.0"
+  }
+}
