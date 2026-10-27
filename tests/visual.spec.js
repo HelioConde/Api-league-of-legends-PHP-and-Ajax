@@ -88,3 +88,80 @@ test.describe("QA Visual - 30 capturas completas",()=>{
     });
   }
 });
+
+test.describe("QA Visual - estados preenchidos e sem dados",()=>{
+  const cases=[
+    ["amigos-preenchidos","friends"],
+    ["perfil-sem-dados","unknown"]
+  ];
+  for(const viewport of viewports)for(const [label,scenario] of cases){
+    test(viewport.name+" / "+label,async({page})=>{
+      const javascriptErrors=[],consoleErrors=[],internalFailures=[],externalWarnings=[];
+      await page.setViewportSize({width:viewport.width,height:viewport.height});
+      page.on("pageerror",error=>javascriptErrors.push(error.message));
+      page.on("console",message=>{
+        if(message.type()!=="error")return;
+        const messageText=message.text();
+        if(/^Failed to load resource/i.test(messageText))return;
+        (messageText.includes("fonts.google")?externalWarnings:consoleErrors).push(messageText.slice(0,250));
+      });
+      page.on("response",response=>{
+        if(response.status()<400)return;
+        (response.url().startsWith("http://127.0.0.1:4173/")?internalFailures:externalWarnings).push("HTTP "+response.status()+" "+response.url());
+      });
+      page.on("requestfailed",request=>{
+        (request.url().startsWith("http://127.0.0.1:4173/")?internalFailures:externalWarnings).push("Failed "+request.url());
+      });
+      await page.goto("/");
+      await page.evaluate(()=>localStorage.clear());
+      await page.reload();
+      if(scenario==="friends"){
+        await page.locator('[data-section="friends"]:visible').first().click();
+        await page.locator("#friend-id").fill("VisualQA#BR1");
+        await page.locator("#friend-form button[type=submit]").click();
+        await expect(page.locator("#friend-list")).toContainText("VisualQA#BR1");
+      }else{
+        await page.locator("#riot-id").fill("VisualQA#BR1");
+        await page.locator("#search-form button").click();
+        await expect(page.locator("#profile-card")).toContainText("Sem estatísticas");
+        await expect(page.locator(".profile-panel .mini-chip")).toHaveText("SEM DADOS ONLINE");
+      }
+      await page.evaluate(()=>document.fonts.ready);
+      const layoutProblems=await page.evaluate(()=>{
+        const issues=[],width=document.documentElement.clientWidth;
+        if(document.documentElement.scrollWidth>width+2)
+          issues.push("Overflow horizontal: "+document.documentElement.scrollWidth+" > "+width);
+        for(const img of document.images){
+          if(img.getClientRects().length&&img.complete&&img.naturalWidth===0)
+            issues.push("Imagem quebrada: "+img.getAttribute("src"));
+        }
+        for(const el of document.querySelectorAll("main button,main input,main select")){
+          if(el.closest("[hidden]"))continue;
+          const r=el.getBoundingClientRect();
+          if(r.width>0&&r.height>0&&(r.left < -2||r.right > width+2))
+            issues.push("Controle fora da tela: "+(el.textContent||el.tagName).trim().slice(0,60));
+        }
+        if(width<=520){
+          const nav=document.querySelector(".mobile-nav");
+          if(nav.scrollWidth>nav.clientWidth+2)issues.push("Navegação mobile ainda rola horizontalmente");
+          const count=[...nav.querySelectorAll("button")].filter(el=>el.getBoundingClientRect().width>0).length;
+          if(count!==6)issues.push("A navegação não mostra todas as seis seções");
+        }
+        return issues;
+      });
+      const directory=path.join("qa-artifacts","screenshots",viewport.name);
+      await mkdir(directory,{recursive:true});
+      const screenshot=path.join(directory,label+".png");
+      await page.screenshot({path:screenshot,fullPage:true,animations:"disabled",timeout:30000});
+      const item={route:scenario,viewport,screenshot,layoutProblems,
+        javascriptErrors,consoleErrors,internalFailures,externalWarnings,
+        passed:!(layoutProblems.length||javascriptErrors.length||consoleErrors.length||internalFailures.length)};
+      await mkdir("qa-artifacts/reports",{recursive:true});
+      await writeFile(path.join("qa-artifacts/reports",viewport.name+"--"+label+".json"),JSON.stringify(item,null,2)+"\n");
+      expect(layoutProblems).toEqual([]);
+      expect(javascriptErrors).toEqual([]);
+      expect(consoleErrors).toEqual([]);
+      expect(internalFailures).toEqual([]);
+    });
+  }
+});
