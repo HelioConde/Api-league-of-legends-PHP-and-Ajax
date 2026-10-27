@@ -86,3 +86,43 @@ test("movimento reduzido",async ({page})=>{
   await page.locator("#gallery-next").click();
   await expect(page.locator("#gallery-count")).toHaveText("2 de 6");
 });
+
+test("menu permanece acessível ao rolar e uma nova seção volta ao início",async ({page})=>{
+  const width=page.viewportSize().width;
+  await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+  const scroll=await page.evaluate(()=>window.scrollY);
+  const selector=width<=780?".mobile-nav":".sidebar";
+  const nav=page.locator(selector);
+  if(scroll>10){
+    const bounds=await nav.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds.y).toBeGreaterThanOrEqual(-1);
+    expect(bounds.y).toBeLessThanOrEqual(width<=780?66:2);
+  }
+  await page.locator('[data-section="friends"]:visible').first().click();
+  await expect(page.locator("#panel-friends")).toBeVisible();
+  await expect.poll(()=>page.evaluate(()=>window.scrollY)).toBeLessThan(8);
+});
+test("galeria mantém setas no início da imagem mesmo em janela baixa",async ({page})=>{
+  await page.setViewportSize({width:1366,height:645});
+  await page.locator('[data-section="gallery"]:visible').first().click();
+  await expect(page.locator("#gallery-next")).toBeInViewport();
+  const stage=await page.locator(".gallery-stage").boundingBox();
+  expect(stage).not.toBeNull();
+  expect(stage.height).toBeLessThan(330);
+});
+test("importação tem um único seletor visível e acessível",async ({page})=>{
+  await page.locator('[data-section="settings"]:visible').first().click();
+  await expect(page.locator('.file-label')).toBeVisible();
+  await expect(page.locator('#import-data')).toHaveCount(1);
+  await expect(page.locator('#import-filename')).toContainText("Nenhum arquivo selecionado");
+});
+
+test("galeria acompanha a imagem central com fundo temático sincronizado",async ({page})=>{
+  await page.locator('[data-section="gallery"]:visible').first().click();
+  const scene=async()=>page.evaluate(()=>getComputedStyle(document.querySelector(".gallery-stage"),"::before").backgroundImage);
+  expect(await scene()).toContain("1.jpg");
+  await page.locator("#gallery-next").click();
+  expect(await scene()).toContain("2.jpg");
+  await expect(page.locator("#gallery-count")).toHaveText("2 de 6");
+});

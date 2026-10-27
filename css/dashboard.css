@@ -79,3 +79,124 @@ main{width:100%;max-width:1480px;margin:0 auto;flex:1;padding:25px clamp(18px,3.
   .workspace.is-secondary .search-form{gap:5px}
   .workspace.is-secondary .search-form small{display:none}
 }
+
+/* Auditoria visual 27/10 — navegação estável e conteúdo que cabe na viewport. */
+@media (min-width:781px){
+  .sidebar{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100dvh;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent;
+  }
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(8,15,26,.97);
+    backdrop-filter:blur(12px);
+  }
+  .workspace.is-secondary main{padding-top:13px;padding-bottom:18px}
+  .workspace.is-secondary .search-banner{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(290px,410px);
+    align-items:center;
+    gap:16px;
+    padding:10px 18px;
+    min-height:64px;
+  }
+  .workspace.is-secondary .search-copy .eyebrow{display:none}
+  .workspace.is-secondary .search-copy h2{font-size:19px;line-height:1.25;margin:0}
+  .workspace.is-secondary .search-copy p{display:none}
+  .workspace.is-secondary .search-form{gap:0}
+  .workspace.is-secondary .search-form label,
+  .workspace.is-secondary .search-form small{
+    position:absolute;
+    width:1px;height:1px;
+    padding:0;margin:-1px;overflow:hidden;
+    clip-path:inset(50%);
+    white-space:nowrap;
+  }
+  .workspace.is-secondary .notice{padding:6px 11px;margin:9px 0}
+  .workspace.is-secondary .section-heading{margin:2px 0 12px}
+  .workspace.is-secondary .section-heading h2{margin:3px 0}
+  .workspace.is-secondary .section-heading p{line-height:1.35}
+  .workspace.is-secondary .gallery-panel{padding:11px}
+  .workspace.is-secondary .gallery-stage{height:clamp(205px,43dvh,420px);aspect-ratio:auto}
+  .workspace.is-secondary .gallery-dots{margin-top:10px}
+  .workspace.is-secondary .settings-card p{min-height:65px}
+}
+@media (min-width:781px) and (max-width:1150px){
+  .workspace.is-secondary .search-banner{grid-template-columns:1fr;gap:5px}
+}
+@media (max-width:780px){
+  .topbar{
+    position:sticky;top:0;z-index:30;
+    background:rgba(8,15,26,.98);
+    backdrop-filter:blur(10px);
+  }
+  .mobile-nav{
+    position:sticky;top:64px;z-index:29;
+    background:#0b1520;
+  }
+  .workspace.is-secondary main{padding-top:9px;padding-bottom:16px}
+  .workspace.is-secondary .search-banner{min-height:0;padding:9px 12px;grid-template-columns:1fr}
+  .workspace.is-secondary .search-copy{display:none}
+  .workspace.is-secondary .search-form{gap:0}
+  .workspace.is-secondary .search-form label,
+  .workspace.is-secondary .search-form small{
+    position:absolute;
+    width:1px;height:1px;
+    padding:0;margin:-1px;overflow:hidden;
+    clip-path:inset(50%);
+    white-space:nowrap;
+  }
+  .workspace.is-secondary .notice{padding:6px 10px;margin:8px 0}
+  .workspace.is-secondary .gallery-stage{height:clamp(225px,46dvh,430px);aspect-ratio:auto}
+}
+.gallery-stage img{object-fit:contain;background:#0a1420}
+.gallery-controls{
+  top:12px;right:12px;bottom:auto;left:auto;transform:none;
+  z-index:1;
+}
+.gallery-controls button{min-width:36px;min-height:36px}
+.friend-grid>.empty{grid-column:1/-1;width:100%;padding:27px 16px}
+.friend-card{display:flex;flex-direction:column;min-height:147px}
+.friend-card .friend-actions{margin-top:auto;padding-top:16px}
+.profile-placeholder{
+  display:grid;place-items:center;
+  flex:0 0 auto;font-size:36px;font-weight:700;
+  color:var(--muted);background:linear-gradient(135deg,#1e3544,#0a1623);
+  border-color:var(--border-strong);
+}
+.profile-hero>.profile-icon{flex:0 0 auto}
+.profile-hero>div:last-child{min-width:0}
+.file-upload{position:relative}
+.file-upload #import-data{
+  position:absolute;width:1px;height:1px;
+  clip-path:inset(50%);padding:0;margin:0;border:0;
+}
+.file-upload:focus-within .file-label{outline:2px solid var(--teal);outline-offset:3px}
+.file-label{min-height:43px;display:grid;place-items:center}
+#import-filename{display:block;margin-top:10px;overflow-wrap:anywhere}
+@media(max-width:520px){
+  .workspace.is-secondary .gallery-stage{height:clamp(210px,42dvh,380px)}
+  .gallery-controls{top:8px;right:8px}
+}
+
+/* A arte do carrossel ocupa o palco com um cenário desfocado e mantém
+   a imagem inteira e nítida no centro, sem faixas vazias. */
+.gallery-stage{isolation:isolate}
+.gallery-stage::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(8,15,26,.36),rgba(8,15,26,.36)),var(--gallery-bg);
+  background-size:cover;background-position:center;
+  filter:blur(18px) saturate(.85);
+  transform:none;
+  pointer-events:none;
+}
+.gallery-stage>img{position:relative;z-index:1;background:transparent}
+.gallery-stage>.gallery-controls{z-index:2}

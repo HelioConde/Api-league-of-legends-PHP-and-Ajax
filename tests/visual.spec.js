@@ -6,6 +6,7 @@ const viewports=[
   {name:"mobile-390",width:390,height:844},
   {name:"tablet-768",width:768,height:1024},
   {name:"desktop-1280",width:1280,height:800},
+  {name:"desktop-1366-short",width:1366,height:645},
   {name:"desktop-1600",width:1600,height:900}
 ];
 const sections=[
