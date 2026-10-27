@@ -1,47 +1,45 @@
-<div align="center">
-  <h1>🎮 League Friends — Riot API com PHP e AJAX</h1>
-  <p><strong>Estudo de integração com dados de League of Legends usando PHP, JavaScript e chamadas HTTP.</strong></p>
-  <p><img alt="PHP" src="https://img.shields.io/badge/PHP-Backend-777BB4?logo=php&logoColor=white"> <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript%20%2B%20AJAX-Frontend-F7DF1E?logo=javascript&logoColor=black"> <img alt="Status" src="https://img.shields.io/badge/status-legado-64748b"></p>
-</div>
+# League Friends 2.0 — Rift Insights
 
-## Objetivo
+Modernização do projeto histórico Api-league-of-legends-PHP-and-Ajax, agora como aplicação **100% estática** no GitHub Pages, sem PHP obrigatório, banco de dados ou chave Riot no navegador.
 
-O projeto explora como apresentar informações de League of Legends em uma interface web e consultar serviços externos por meio de requisições AJAX. A entrada HTML histórica usa o título **League Friends** e a pasta `php/` reúne implementações relacionadas à API Riot e cache.
+## Funcionalidades concluídas nesta branch
+- Catálogo Data Dragon pt_BR com versão dinâmica, fallback de reserva e imagens de campeões.
+- Busca, filtros por classe, detalhes e favoritos persistidos por navegador.
+- Lista de amigos local, migração de dados antigos, importar/exportar JSON e remoção segura.
+- Histórico e estatísticas de partidas **fictícias**, com filtros e aviso explícito.
+- Responsividade, navegação semântica, foco visível, reduced motion.
+- Testes unitários, Playwright em desktop e mobile, workflow de CI e GitHub Pages.
 
-**Estado:** exercício antigo. Rotas, versões de endpoints e autenticação devem ser revalidadas antes de qualquer teste com a API atual.
+## Desenvolvimento local
 
-## Estrutura
+    npm install
+    npm run dev
+    npm run check
+    npx playwright install chromium
+    npm run test:e2e
 
-| Caminho | Função |
-| --- | --- |
-| `index.html` | Interface League Friends |
-| `index.php` | Entrada da parte PHP |
-| `php/php-riot-api.php` | Código de integração histórico |
-| `php/summoner.php` | Consulta de invocador (API legada) |
-| `php/FileSystemCache.php` | Cache em arquivos |
-| `js/`, `css/` | Scripts e estilos |
-| `view/`, `img/`, `iconIMG/` | Páginas e mídia |
+## Deploy
+Configurar **Settings > Pages > Source: GitHub Actions**. Após merge da branch na main, o workflow publica o site em:
 
-## Executar e estudar
+https://helioconde.github.io/Api-league-of-legends-PHP-and-Ajax/
 
-Para abrir as rotas PHP localmente, use **PHP instalado** e sirva a raiz do repositório:
+O Vite utiliza base path /Api-league-of-legends-PHP-and-Ajax/ no build.
 
-```bash
-git clone https://github.com/HelioConde/Api-league-of-legends-PHP-and-Ajax.git
-cd Api-league-of-legends-PHP-and-Ajax
-php -S 127.0.0.1:8000
-```
+## Segurança e limites
+- GitHub Pages não executa PHP. Os arquivos legados permanecem no repositório como referência, mas não são importados pelo build.
+- Consultas de ranking e partidas **reais** exigem um intermediário seguro. Não confundir as partidas fictícias com resultados ao vivo.
+- Dados públicos de campeões são consultados no Data Dragon. Se offline, um catálogo de reserva permite navegar.
+- Amigos e favoritos são locais ao navegador. Sem conta e sem sincronização automática.
+- Revogar qualquer chave Riot historicamente publicada. Excluir token da branch **não remove o histórico Git**.
+- Independente e não endossado pela Riot Games.
 
-Acesse `http://127.0.0.1:8000`.
+## Organização
+- src/main.js — navegação e componentes
+- src/storage.js — persistência e migração segura
+- src/catalog.js — Data Dragon e fallback
+- src/style.css — tokens e layout
+- data/demo.json — partidas demonstrativas
+- docs/DESIGN_SYSTEM.md — padrões visuais
+- tests — testes automatizados
 
-> Não é garantido que consultas Riot funcionem sem adaptação. Antes de chamar a API, revise os endpoints e as regras de autenticação na [documentação oficial](https://developer.riotgames.com/).
-
-## Cuidados antes de retomar
-
-- **Nunca publique uma Riot API key** em JavaScript público, arquivos versionados, screenshots ou logs.
-- O projeto histórico possui arquivos JavaScript relacionados a tokens/versões. **Audite-os e revogue quaisquer credenciais antigas expostas**, caso ainda existam.
-- Use backend autenticado ou função de servidor para chamar a Riot; limite requisições e trate erros `401`, `403`, `404` e `429`.
-- Revise cache, permissões de escrita e validação dos parâmetros recebidos.
-- Dados de invocador e regiões mudaram ao longo do tempo: migre somente depois de consultar os endpoints disponíveis hoje.
-
-Este é um projeto independente, sem afiliação oficial com Riot Games. Desenvolvido por [Hélio Conde](https://github.com/HelioConde).
+Criado por [Hélio Conde](https://github.com/HelioConde).
