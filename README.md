@@ -59,3 +59,7 @@ O código PHP e os scripts legados permanecem preservados no repositório para f
 O armazenamento é apenas local ao navegador; nenhuma conta ou sincronização é fornecida. A futura consulta a dados reais exigirá uma função serverless segura para guardar o token da Riot e respeitar as políticas e limites da API.
 
 Projeto independente, sem vínculo oficial com a Riot Games. Desenvolvido por [Hélio Conde](https://github.com/HelioConde).
+
+## Capturas automáticas de páginas inteiras
+
+O workflow de qualidade salva capturas Playwright em 360, 390, 768, 1280 e 1600px, verifica console, JS, recursos e overflow, e envia uma galeria HTML e os diagnósticos JSON como artefato **league-friends-visual-qa**. As 40 capturas incluem as seis seções e estados extras de amigos preenchidos e perfil sem dados. Veja [docs/QA_VISUAL.md](docs/QA_VISUAL.md).

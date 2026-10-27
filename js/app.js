@@ -34,6 +34,8 @@ function commit(next,message){
   renderAll();
 }
 function renderProfile(){
+  const badge=document.querySelector(".profile-panel .mini-chip");
+  if(badge)badge.textContent=current.isDemo?"DEMONSTRAÇÃO":"SEM DADOS ONLINE";
   const favorite=state.favorites.some(id=>sameRiotId(id,current.riotId));
   const friend=state.friends.some(id=>sameRiotId(id,current.riotId));
   const [name,tag]=current.riotId.split("#");
@@ -145,6 +147,7 @@ function renderAll(){
 function showSection(next){
   if(!Object.prototype.hasOwnProperty.call(SECTION_TITLES,next)) return;
   section=next;
+  document.querySelector(".workspace").classList.toggle("is-secondary",next!=="overview");
   for(const key of Object.keys(SECTION_TITLES)){
     byId("panel-"+key).hidden=key!==next;
   }
