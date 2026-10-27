@@ -43,3 +43,11 @@ A fonte Inter é opcional; existem fallbacks de sistema. Corpo de 14px, títulos
 
 ## Quality Assurance
 Testes unitários com node --test; E2E com Playwright. Avaliar teclado, contraste, zoom, scroll lateral em 360/390/768/1280/1600 e navegação sem animações. Verificar leitores de tela manualmente.
+
+
+## Acessibilidade e descoberta (revisão 27/10/2026)
+- Atalhos de perfis demonstrativos são botões semânticos, não links falsos.
+- Amigos e favoritos aparecem juntos; não há necessidade de adicionar como amigo para reencontrar um favorito.
+- Busca e filtros operam no navegador, sem enviar dados a servidores; favoritos aparecem primeiro.
+- A comparação só destaca diferenças quando ambos os jogadores têm estatísticas demonstrativas e são distintos. Comparar o mesmo ID mostra um aviso.
+- Indicadores visuais de porcentagem acompanham seus números em texto, evitando depender apenas das cores.

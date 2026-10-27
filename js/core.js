@@ -42,3 +42,23 @@ export function safeImport(json, maxFriends=80) {
   if(parsed.selected!==null && parsed.selected!==undefined && !isValidRiotId(parsed.selected)) throw new Error("O jogador selecionado é inválido.");
   return {version:2,friends:uniqueRiotIds(parsed.friends),favorites:uniqueRiotIds(parsed.favorites),selected:normalizeRiotId(parsed.selected||"AlchemyFlames#BR1")};
 }
+
+/** Unifica amigos e favoritos para que um jogador favoritado não fique escondido. */
+export function selectSavedPlayers(friends=[],favorites=[],filter="all",query="") {
+  const saved=uniqueRiotIds(Array.isArray(friends)?friends:[]);
+  const marked=uniqueRiotIds(Array.isArray(favorites)?favorites:[]);
+  const needle=typeof query==="string"?query.trim().toLocaleLowerCase("pt-BR"):"";
+  return uniqueRiotIds([...saved,...marked]).map(id=>({
+    id,friend:saved.some(x=>sameRiotId(x,id)),favorite:marked.some(x=>sameRiotId(x,id))
+  })).filter(item=>
+    (filter!=="friends"||item.friend)&&(filter!=="favorites"||item.favorite)&&
+    (!needle||item.id.toLocaleLowerCase("pt-BR").includes(needle))
+  ).sort((a,b)=>Number(b.favorite)-Number(a.favorite)||a.id.localeCompare(b.id,"pt-BR"));
+}
+/** Comparação apenas de estatísticas de demonstração disponíveis. */
+export function compareSummaries(left,right) {
+  if(!left||!right||![left.winRate,right.winRate,left.kda,right.kda].every(Number.isFinite))return null;
+  const winGap=left.winRate-right.winRate;
+  const kdaGap=left.kda-right.kda;
+  return {winGap,kdaGap,leader:winGap===0?"tie":winGap>0?"left":"right"};
+}
