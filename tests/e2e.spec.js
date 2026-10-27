@@ -14,10 +14,10 @@ test("dashboard independente de PHP",async ({page})=>{
 });
 test("busca, desconhecidos e perfil fictício",async ({page})=>{
   await page.locator("#riot-id").fill("OutroNome#BR1");
-  await page.locator("#search-form button").click();
+  await page.locator("#search-form button[type=submit]").click();
   await expect(page.locator("#profile-card")).toContainText("Sem estatísticas");
   await page.locator("#riot-id").fill("AhriMain#BR1");
-  await page.locator("#search-form button").click();
+  await page.locator("#search-form button[type=submit]").click();
   await expect(page.locator("#profile-card")).toContainText("Diamante");
 });
 test("favoritos persistem",async ({page})=>{
@@ -129,7 +129,7 @@ test("galeria acompanha a imagem central com fundo temático sincronizado",async
 
 test("favoritar perfil sem adicionar amigo permite reencontrá-lo e filtrar",async({page})=>{
   await page.locator("#riot-id").fill("AhriMain#BR1");
-  await page.locator("#search-form button").click();
+  await page.locator("#search-form button[type=submit]").click();
   await page.locator('[data-profile-action="favorite"]').click();
   await page.locator('[data-section="friends"]:visible').first().click();
   await expect(page.locator("#friend-list")).toContainText("AhriMain#BR1");
@@ -142,7 +142,7 @@ test("favoritar perfil sem adicionar amigo permite reencontrá-lo e filtrar",asy
   await page.locator("#saved-search").fill("Ahri");
   await expect(page.locator("#friend-list")).toContainText("AhriMain#BR1");
   await page.locator(".friend-card").getByRole("button",{name:/Amigo/}).click();
-  await expect(page.locator("#saved-summary")).toContainText("1 amigos");
+  await expect(page.locator("#saved-summary")).toContainText("1 amigo");
   await page.reload();
   await page.locator('[data-section="friends"]:visible').first().click();
   await expect(page.locator("#friend-list")).toContainText("AhriMain#BR1");

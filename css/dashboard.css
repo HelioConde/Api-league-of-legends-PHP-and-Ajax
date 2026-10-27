@@ -230,3 +230,6 @@ main{width:100%;max-width:1480px;margin:0 auto;flex:1;padding:25px clamp(18px,3.
 .bar-track>div{height:100%;border-radius:40px;background:linear-gradient(90deg,var(--teal),var(--gold))}
 @media(max-width:780px){.compare-insight:has(.insight-header){grid-template-columns:1fr}}
 @media(max-width:520px){.saved-toolbar{grid-template-columns:1fr;gap:9px}.demo-shortcuts button{font-size:10px}.friend-grid{gap:10px}}
+
+/* Atalhos aparecem apenas na busca principal: painéis internos mantêm sua altura compacta. */
+.workspace.is-secondary .demo-shortcuts{display:none}

@@ -107,7 +107,7 @@ function renderFriends(){
   const friendCount=state.friends.length;
   const favoriteCount=state.favorites.length;
   byId("saved-summary").textContent=total===0?"Nenhum jogador salvo neste navegador.":
-    entries.length+" de "+total+" jogadores · "+friendCount+" amigos · "+favoriteCount+" favoritos";
+    entries.length+" de "+total+" jogadores · "+friendCount+(friendCount===1?" amigo":" amigos")+" · "+favoriteCount+(favoriteCount===1?" favorito":" favoritos");
   byId("friend-list").innerHTML=entries.length?entries.map(item=>{
     const escaped=escapeHtml(item.id);
     const isDemo=DEMO_PLAYERS.some(x=>sameRiotId(x.riotId,item.id));

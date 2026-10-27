@@ -134,7 +134,7 @@ test.describe("QA Visual - estados preenchidos e sem dados",()=>{
         await expect(page.locator("#friend-list")).toContainText("VisualQA#BR1");
       }else{
         await page.locator("#riot-id").fill("VisualQA#BR1");
-        await page.locator("#search-form button").click();
+        await page.locator("#search-form button[type=submit]").click();
         await expect(page.locator("#profile-card")).toContainText("Sem estatísticas");
         await expect(page.locator(".profile-panel .mini-chip")).toHaveText("SEM DADOS ONLINE");
       }
