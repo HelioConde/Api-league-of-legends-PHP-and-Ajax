@@ -167,7 +167,7 @@ function showSection(next){
 function setGallery(index){
   galleryIndex=(index+galleryImages.length)%galleryImages.length;
   byId("gallery-image").src=galleryImages[galleryIndex];
-  byId("gallery-widget").style.setProperty("--gallery-bg",`url("${galleryImages[galleryIndex]}")`);
+  byId("gallery-widget").style.setProperty("--gallery-bg",`url("${new URL(galleryImages[galleryIndex],document.baseURI).href}")`);
   byId("gallery-image").alt="Arte temática "+(galleryIndex+1)+" de "+galleryImages.length;
   byId("gallery-count").textContent=(galleryIndex+1)+" de "+galleryImages.length;
   byId("gallery-dots").replaceChildren(...galleryImages.map((_,i)=>{
