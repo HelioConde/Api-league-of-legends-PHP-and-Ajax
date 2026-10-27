@@ -1,9 +1,10 @@
-name: League Friends - testes
+name: League Friends - testes e auditoria visual
 on:
   push:
-    branches: [main, "feat/**"]
+    branches: [main, "feat/**", "qa/**"]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -18,7 +19,7 @@ jobs:
       - run: npm test
   playwright:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,13 +28,14 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-      - name: Evidencias
+      - name: Gerar galeria de capturas e relatorio
+        if: always()
+        run: npm run qa:report
+      - name: Anexar screenshots e diagnosticos
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results
-          path: |
-            test-results/
-            playwright-report/
-          if-no-files-found: ignore
-          retention-days: 7
+          name: league-friends-visual-qa
+          path: qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 14
