@@ -63,3 +63,7 @@ Projeto independente, sem vínculo oficial com a Riot Games. Desenvolvido por [H
 ## Capturas automáticas de páginas inteiras
 
 O workflow de qualidade salva capturas Playwright em 360, 390, 768, 1280 e 1600px, verifica console, JS, recursos e overflow, e envia uma galeria HTML e os diagnósticos JSON como artefato **league-friends-visual-qa**. As 40 capturas incluem as seis seções e estados extras de amigos preenchidos e perfil sem dados. Veja [docs/QA_VISUAL.md](docs/QA_VISUAL.md).
+
+### Revisão visual de desktop (outubro de 2026)
+
+A auditoria foi ampliada para **48 capturas** em seis resoluções, incluindo **1366×645** para simular janelas de navegador com barras do sistema. Foram ajustados menu lateral fixo durante scroll, busca compacta nas páginas internas, galeria com navegação visível, estados vazios, importação e mensagens contextuais. Mais informações em `docs/QA_VISUAL.md`.

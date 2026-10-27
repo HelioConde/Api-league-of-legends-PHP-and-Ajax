@@ -42,10 +42,10 @@ function renderProfile(){
   const summary=current.summary;
   byId("profile-card").innerHTML=[
     '<div class="profile-hero">',
-    '<img class="profile-icon" src="',championImage(current.icon),'" alt="',escapeHtml(current.isDemo?"Ícone demonstrativo de "+current.favoriteChampion:"Imagem padrão do perfil"),'">',
+    current.isDemo?'<img class="profile-icon" src="'+championImage(current.icon)+'" alt="'+escapeHtml("Ícone demonstrativo de "+current.favoriteChampion)+'">':'<div class="profile-icon profile-placeholder" role="img" aria-label="Sem imagem de perfil disponível">?</div>',
     '<div><div class="profile-id">',escapeHtml(name),'<span class="profile-tag">#',escapeHtml(tag),'</span></div>',
     '<p class="profile-region">',current.isDemo?"Região "+escapeHtml(current.region)+" · Nível "+current.level:"Riot ID salvo localmente · Sem dados de partidas",'</p></div></div>',
-    '<div class="rank-box"><div><small>RANQUEADA SOLO / DUO</small><strong>',current.isDemo?escapeHtml(current.tier+" "+current.division):"Sem estatísticas",'</strong><small>',current.isDemo?current.lp+" PDL · Exemplo fictício":"A consulta à Riot API não está habilitada",'</small></div><div class="rank-emblem" aria-hidden="true">◆</div></div>',
+    '<div class="rank-box"><div><small>RANQUEADA SOLO / DUO</small><strong>',current.isDemo?escapeHtml(current.tier+" "+current.division):"Sem estatísticas",'</strong><small>',current.isDemo?current.lp+" PDL · Exemplo fictício":"A consulta à Riot API não está habilitada",'</small></div>',current.isDemo?'<div class="rank-emblem" aria-hidden="true">◆</div>':'','</div>',
     '<div class="profile-facts"><div><small>Campeão favorito</small><strong>',escapeHtml(current.favoriteChampion||"Não informado"),'</strong></div>',
     '<div><small>Vitórias nos exemplos</small><strong>',summary?summary.wins:"—",'</strong></div>',
     '<div><small>Partidas exibidas</small><strong>',summary?summary.games:"—",'</strong></div>',
@@ -146,7 +146,11 @@ function renderAll(){
 }
 function showSection(next){
   if(!Object.prototype.hasOwnProperty.call(SECTION_TITLES,next)) return;
+  const changed=section!==next;
+  if(changed)status("");
   section=next;
+  // Evita manter a rolagem da página anterior após navegar pelo menu.
+  if(changed && typeof window.scrollTo==="function") window.scrollTo({top:0,behavior:"instant"});
   document.querySelector(".workspace").classList.toggle("is-secondary",next!=="overview");
   for(const key of Object.keys(SECTION_TITLES)){
     byId("panel-"+key).hidden=key!==next;

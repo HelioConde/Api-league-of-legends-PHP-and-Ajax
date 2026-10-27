@@ -106,7 +106,7 @@
           <div class="section-heading"><div><span class="eyebrow">PRIVACIDADE E BACKUP</span><h2 id="settings-heading">Dados locais</h2><p>Exporte sua lista de amigos e preferências, ou restaure um backup JSON.</p></div></div>
           <div class="settings-grid">
             <article class="panel settings-card"><h3>Exportar</h3><p>Baixe um arquivo JSON contendo somente suas escolhas e lista local de amigos.</p><button type="button" id="export-data">Baixar backup JSON</button></article>
-            <article class="panel settings-card"><h3>Importar</h3><p>Escolha um backup desta aplicação. A importação substitui os dados locais atuais.</p><label class="file-label" for="import-data">Escolher arquivo JSON</label><input id="import-data" type="file" accept="application/json,.json"><span id="import-filename" class="muted"></span></article>
+            <article class="panel settings-card"><h3>Importar</h3><p>Escolha um backup desta aplicação. A importação substitui os dados locais atuais.</p><div class="file-upload"><input id="import-data" type="file" accept="application/json,.json" aria-describedby="import-filename"><label class="file-label" for="import-data">Escolher arquivo JSON</label></div><span id="import-filename" class="muted" aria-live="polite">Nenhum arquivo selecionado</span></article>
             <article class="panel settings-card"><h3>Restaurar</h3><p>Limpe os amigos e favoritos. Os exemplos continuarão disponíveis.</p><button type="button" class="danger-button" id="reset-data">Limpar dados locais</button></article>
           </div>
         </section>
