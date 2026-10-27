@@ -1,6 +1,7 @@
 node_modules/
-playwright-report/
+qa-artifacts/
 test-results/
-.DS_Store
-coverage/
-*.log
+playwright-report/
+.env
+.env.*
+*.local
