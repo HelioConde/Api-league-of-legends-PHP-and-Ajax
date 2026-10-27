@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "node --test tests/unit.test.js",
     "test:e2e": "playwright test",
-    "check": "npm run test && npm run build"
+    "check": "npm run test && npm run build",
+    "qa:visual": "playwright test --project=visual-qa",
+    "qa:report": "node scripts/qa-report.mjs"
   },
   "devDependencies": {
     "vite": "^7.3.0",
