@@ -15,3 +15,7 @@ A execução CI gera o artifact league-friends-visual-qa inclusive quando os tes
 Além das 30 telas padrão, cinco larguras fotografam dois estados adicionais: **amigos preenchidos** (Riot ID salvo localmente) e **perfil desconhecido** (sem estatísticas online). Total esperado: **40 capturas completas**. O teste usa o mesmo esquema JSON e a mesma galeria de artefatos.
 
 A revisão das capturas originais levou a ajustes concretos: seis opções de navegação visíveis em telas de até 520px, Riot ID com TAG sem quebra interna, e barra de pesquisa compacta nas seções secundárias. Os testes adicionais verificam ausência de overflow, de imagens visíveis quebradas e de erros de JavaScript nesses estados.
+
+## Validação de navegação mobile
+
+O Playwright também reprova menus de navegação que tenham conteúdo horizontal oculto, mesmo quando o documento inteiro não apresenta overflow. Todos os seis botões precisam caber na tela para evitar que as opções finais fiquem cortadas. Essa verificação nasceu da inspeção de capturas em 360 px.
