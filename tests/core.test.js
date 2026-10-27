@@ -58,3 +58,19 @@ test("perfis inexistentes não recebem números fabricados",()=>{
   assert.deepEqual(player.matches,[]);
   assert.ok(allPlayers(addFriend(cleanState(DEFAULT_STATE),"OutroNome#BR1")).includes("OutroNome#BR1"));
 });
+
+test("favoritos que não são amigos ficam acessíveis e sem duplicação",async()=>{
+  const {selectSavedPlayers,compareSummaries}=await import("../js/core.js");
+  const friends=["AmigoBeta#BR1","AmigoAlfa#BR1"];
+  const favorites=["amigoalfa#br1","Exemplo#BR1"];
+  const all=selectSavedPlayers(friends,favorites);
+  assert.equal(all.length,3);
+  assert.equal(all[0].favorite,true);
+  assert.equal(selectSavedPlayers(friends,favorites,"favorites").length,2);
+  assert.equal(selectSavedPlayers(friends,favorites,"friends").length,2);
+  assert.deepEqual(selectSavedPlayers(friends,favorites,"all","exemplo").map(p=>p.id),["Exemplo#BR1"]);
+  assert.equal(selectSavedPlayers(friends,favorites,"all","nada").length,0);
+  assert.equal(compareSummaries(null,{winRate:50,kda:2}),null);
+  assert.deepEqual(compareSummaries({winRate:60,kda:3.33},{winRate:75,kda:4.53}),
+    {winGap:-15,kdaGap:-1.2000000000000002,leader:"right"});
+});

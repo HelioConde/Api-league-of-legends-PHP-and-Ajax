@@ -56,7 +56,7 @@
           <form id="search-form" class="search-form">
             <label for="riot-id">Riot ID</label>
             <div class="search-field"><input id="riot-id" name="riotId" type="text" placeholder="AlchemyFlames#BR1" autocomplete="off" maxlength="24" aria-describedby="search-help" required><button type="submit">Pesquisar <span aria-hidden="true">↗</span></button></div>
-            <small id="search-help">Exemplos: AlchemyFlames#BR1, AhriMain#BR1, JunglePath#BR1</small>
+            <div class="demo-shortcuts" aria-label="Perfis para explorar"><span id="search-help">Explorar exemplos:</span><button type="button" data-demo-id="AlchemyFlames#BR1">AlchemyFlames</button><button type="button" data-demo-id="AhriMain#BR1">AhriMain</button><button type="button" data-demo-id="JunglePath#BR1">JunglePath</button></div>
           </form>
         </section>
 
@@ -85,12 +85,15 @@
         <section id="panel-friends" class="section-panel" aria-labelledby="friends-heading" hidden>
           <div class="section-heading"><div><span class="eyebrow">SUA LISTA</span><h2 id="friends-heading">Amigos salvos</h2><p>Os Riot IDs ficam guardados apenas neste navegador.</p></div></div>
           <form id="friend-form" class="inline-form panel"><label for="friend-id">Adicionar Riot ID</label><div class="inline-fields"><input id="friend-id" placeholder="Jogador#BR1" maxlength="24" required><button type="submit">Adicionar amigo</button></div></form>
+          <div class="saved-toolbar panel" aria-label="Filtros de jogadores salvos"><div class="saved-search"><label for="saved-search">Buscar jogador</label><input type="search" id="saved-search" placeholder="Nome ou TAG" autocomplete="off"></div><div class="saved-filter"><label for="saved-filter">Mostrar</label><select id="saved-filter"><option value="all">Todos</option><option value="friends">Amigos</option><option value="favorites">Favoritos</option></select></div></div>
+          <p class="saved-summary" id="saved-summary" role="status" aria-live="polite"></p>
           <div id="friend-list" class="friend-grid"></div>
         </section>
 
         <section id="panel-compare" class="section-panel" aria-labelledby="compare-heading" hidden>
           <div class="section-heading"><div><span class="eyebrow">DUO ANALYTICS</span><h2 id="compare-heading">Compare jogadores</h2><p>As estatísticas pertencem somente aos perfis demonstrativos.</p></div></div>
           <div class="compare-controls panel"><label for="compare-a">Jogador 1</label><select id="compare-a"></select><span aria-hidden="true" class="versus">VS</span><label for="compare-b">Jogador 2</label><select id="compare-b"></select></div>
+          <div id="compare-insight" class="compare-insight" role="status" aria-live="polite"></div>
           <div id="compare-output" class="compare-grid"></div>
         </section>
 

@@ -14,10 +14,10 @@ test("dashboard independente de PHP",async ({page})=>{
 });
 test("busca, desconhecidos e perfil fictício",async ({page})=>{
   await page.locator("#riot-id").fill("OutroNome#BR1");
-  await page.locator("#search-form button").click();
+  await page.locator("#search-form button[type=submit]").click();
   await expect(page.locator("#profile-card")).toContainText("Sem estatísticas");
   await page.locator("#riot-id").fill("AhriMain#BR1");
-  await page.locator("#search-form button").click();
+  await page.locator("#search-form button[type=submit]").click();
   await expect(page.locator("#profile-card")).toContainText("Diamante");
 });
 test("favoritos persistem",async ({page})=>{
@@ -125,4 +125,38 @@ test("galeria acompanha a imagem central com fundo temático sincronizado",async
   await page.locator("#gallery-next").click();
   expect(await scene()).toContain("2.jpg");
   await expect(page.locator("#gallery-count")).toHaveText("2 de 6");
+});
+
+test("favoritar perfil sem adicionar amigo permite reencontrá-lo e filtrar",async({page})=>{
+  await page.locator("#riot-id").fill("AhriMain#BR1");
+  await page.locator("#search-form button[type=submit]").click();
+  await page.locator('[data-profile-action="favorite"]').click();
+  await page.locator('[data-section="friends"]:visible').first().click();
+  await expect(page.locator("#friend-list")).toContainText("AhriMain#BR1");
+  await expect(page.locator("#friend-list")).toContainText("Favorito");
+  await page.locator("#saved-filter").selectOption("friends");
+  await expect(page.locator("#friend-list")).toContainText("Nenhum jogador encontrado");
+  await page.locator("#saved-filter").selectOption("favorites");
+  await page.locator("#saved-search").fill("notfound");
+  await expect(page.locator("#friend-list")).toContainText("Nenhum jogador encontrado");
+  await page.locator("#saved-search").fill("Ahri");
+  await expect(page.locator("#friend-list")).toContainText("AhriMain#BR1");
+  await page.locator(".friend-card").getByRole("button",{name:/Amigo/}).click();
+  await expect(page.locator("#saved-summary")).toContainText("1 amigo");
+  await page.reload();
+  await page.locator('[data-section="friends"]:visible').first().click();
+  await expect(page.locator("#friend-list")).toContainText("AhriMain#BR1");
+});
+test("atalhos de demonstração abrem os perfis diretamente",async({page})=>{
+  await page.locator('[data-demo-id="JunglePath#BR1"]').click();
+  await expect(page.locator("#profile-card")).toContainText("JunglePath#BR1");
+  await expect(page.locator("#riot-id")).toHaveValue("JunglePath#BR1");
+});
+test("comparação mostra destaque, empate e indisponibilidade sem inventar números",async({page})=>{
+  await page.locator('[data-section="compare"]:visible').first().click();
+  await expect(page.locator("#compare-insight")).toContainText("Maior taxa de vitória: AhriMain#BR1");
+  await page.locator("#compare-b").selectOption("AlchemyFlames#BR1");
+  await expect(page.locator("#compare-insight")).toContainText("Selecione dois jogadores diferentes");
+  await page.locator("#compare-b").selectOption("AhriMain#BR1");
+  await expect(page.locator("#compare-insight .insight-bar")).toHaveCount(2);
 });

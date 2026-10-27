@@ -1,5 +1,5 @@
 import {DEMO_PLAYERS,DEMO_NOTICE} from "./data/demo.js";
-import {normalizeRiotId,isValidRiotId,sameRiotId,kda,filterMatches} from "./core.js";
+import {normalizeRiotId,isValidRiotId,sameRiotId,kda,filterMatches,selectSavedPlayers,compareSummaries} from "./core.js";
 import {readState,saveState,addFriend,removeFriend,toggleFavorite,restoreBackup,DEFAULT_STATE} from "./storage/store.js";
 import {lookupPlayer,allPlayers} from "./services/players.js";
 
@@ -14,6 +14,7 @@ let galleryIndex=0;
 let compareA=DEMO_PLAYERS[0].riotId;
 let compareB=DEMO_PLAYERS[1].riotId;
 let editingFriend=null;
+let savedFilter="all";
 
 function escapeHtml(value){
   return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
@@ -101,18 +102,30 @@ function renderMatches(){
     emptyMarkup(current.matches.length?"Nenhum resultado para este filtro":"Sem histórico disponível",current.matches.length?"Altere os filtros para visualizar outras partidas.":"Este perfil não possui partidas de demonstração.");
 }
 function renderFriends(){
-  byId("friend-list").innerHTML=state.friends.length?state.friends.map(id=>{
-    const favorite=state.favorites.some(x=>sameRiotId(x,id));
-    const isDemo=DEMO_PLAYERS.some(x=>sameRiotId(x.riotId,id));
-    const escaped=escapeHtml(id);
+  const entries=selectSavedPlayers(state.friends,state.favorites,savedFilter,byId("saved-search").value);
+  const total=selectSavedPlayers(state.friends,state.favorites).length;
+  const friendCount=state.friends.length;
+  const favoriteCount=state.favorites.length;
+  byId("saved-summary").textContent=total===0?"Nenhum jogador salvo neste navegador.":
+    entries.length+" de "+total+" jogadores · "+friendCount+(friendCount===1?" amigo":" amigos")+" · "+favoriteCount+(favoriteCount===1?" favorito":" favoritos");
+  byId("friend-list").innerHTML=entries.length?entries.map(item=>{
+    const escaped=escapeHtml(item.id);
+    const isDemo=DEMO_PLAYERS.some(x=>sameRiotId(x.riotId,item.id));
     return [
-      '<article class="friend-card"><strong>',escaped,'</strong><small>',isDemo?"Perfil demonstrativo":"Riot ID local · estatísticas indisponíveis",'</small>',
+      '<article class="friend-card"><div class="friend-title"><strong>',escaped,'</strong><div class="friend-chips">',
+      item.favorite?'<span class="saved-chip favorite-chip">★ Favorito</span>':'',
+      item.friend?'<span class="saved-chip">Amigo</span>':'',
+      '</div></div><small>',isDemo?"Perfil demonstrativo · estatísticas fictícias":"Riot ID local · estatísticas indisponíveis",'</small>',
       '<div class="friend-actions"><button type="button" data-action="select" data-id="',escaped,'">Abrir</button>',
-      '<button type="button" data-action="favorite" data-id="',escaped,'" aria-pressed="',favorite,'" class="',favorite?"is-favorite":"",'">',favorite?"★ Favorito":"☆ Favoritar",'</button>',
-      '<button type="button" data-action="edit" data-id="',escaped,'">Editar</button>',
-      '<button type="button" data-action="remove" data-id="',escaped,'">Excluir</button></div></article>'
+      '<button type="button" data-action="favorite" data-id="',escaped,'" aria-pressed="',item.favorite,'" class="',item.favorite?"is-favorite":"",'">',item.favorite?"★ Desfavoritar":"☆ Favoritar",'</button>',
+      item.friend?'<button type="button" data-action="edit" data-id="'+escaped+'">Editar</button>':
+        '<button type="button" data-action="add" data-id="'+escaped+'">＋ Amigo</button>',
+      item.friend?'<button type="button" data-action="remove" data-id="'+escaped+'">Excluir</button>':'',
+      '</div></article>'
     ].join("");
-  }).join(""):emptyMarkup("Sua lista está vazia","Adicione um Riot ID usando o formulário acima ou abra um perfil e selecione Adicionar amigo.");
+  }).join(""):
+    emptyMarkup(total===0?"Sua lista está vazia":"Nenhum jogador encontrado",
+      total===0?"Adicione um Riot ID ou favorite um perfil para vê-lo aqui.":"Altere a busca ou o filtro para mostrar mais jogadores.");
 }
 function fillSelect(select,ids,value){
   select.replaceChildren(...ids.map(id=>new Option(id,id)));
@@ -124,6 +137,30 @@ function renderComparison(){
   if(!ids.some(id=>sameRiotId(id,compareB))) compareB=ids[1]||ids[0];
   fillSelect(byId("compare-a"),ids,compareA);
   fillSelect(byId("compare-b"),ids,compareB);
+  const left=lookupPlayer(compareA);
+  const right=lookupPlayer(compareB);
+  const same=sameRiotId(compareA,compareB);
+  const comparison=same?null:compareSummaries(left.summary,right.summary);
+  if(same){
+    byId("compare-insight").innerHTML='<div class="insight-message">Selecione dois jogadores diferentes para comparar.</div>';
+  }else if(!comparison){
+    byId("compare-insight").innerHTML='<div class="insight-message">Um dos perfis não possui estatísticas. Escolha dois exemplos para comparar resultados fictícios.</div>';
+  }else{
+    const winner=comparison.leader==="tie"?"Empate na taxa de vitória":
+      "Maior taxa de vitória: "+escapeHtml(comparison.leader==="left"?compareA:compareB);
+    const gap=Math.abs(comparison.winGap);
+    const maxRate=Math.max(1,left.summary.winRate,right.summary.winRate);
+    byId("compare-insight").innerHTML=[
+      '<div class="insight-header"><span class="eyebrow">LEITURA DO DUO · SIMULAÇÃO</span><strong>',winner,
+      '</strong><small>Diferença de ',gap,' ponto',gap===1?'':'s',' percentual',gap===1?'':'is',
+      ' · apenas ',left.summary.games,' e ',right.summary.games,' partidas fictícias</small></div>',
+      '<div class="insight-bars">',
+      [left,right].map(player=>'<div class="insight-bar"><span>'+escapeHtml(player.riotId)+
+        '</span><strong>'+player.summary.winRate+'%</strong><div class="bar-track" aria-hidden="true"><div style="width:'+
+        (player.summary.winRate/maxRate*100)+'%"></div></div></div>').join(""),
+      '</div>'
+    ].join("");
+  }
   byId("compare-output").innerHTML=[compareA,compareB].map(id=>{
     const player=lookupPlayer(id);
     const s=player.summary;
@@ -202,13 +239,21 @@ function resetEditing(){
 
 document.querySelectorAll("[data-section]").forEach(button=>button.addEventListener("click",()=>showSection(button.dataset.section)));
 document.querySelectorAll("[data-go]").forEach(button=>button.addEventListener("click",()=>showSection(button.dataset.go)));
+document.querySelectorAll("[data-demo-id]").forEach(button=>button.addEventListener("click",()=>{
+  const id=button.dataset.demoId;
+  byId("riot-id").value=id;
+  showSection("overview");
+  commit({...state,selected:id},"Perfil de demonstração selecionado.");
+}));
+byId("saved-search").addEventListener("input",renderFriends);
+byId("saved-filter").addEventListener("change",event=>{savedFilter=event.target.value;renderFriends()});
 
 byId("search-form").addEventListener("submit",event=>{
   event.preventDefault();
   const id=normalizeRiotId(byId("riot-id").value);
   if(!isValidRiotId(id)){status("Informe um Riot ID válido, por exemplo Nome#BR1.","error");return}
-  commit({...state,selected:id},DEMO_PLAYERS.some(x=>sameRiotId(x.riotId,id))?"Perfil fictício carregado.":"Riot ID selecionado. Este jogador não possui estatísticas no modo demonstração.");
   showSection("overview");
+  commit({...state,selected:id},DEMO_PLAYERS.some(x=>sameRiotId(x.riotId,id))?"Perfil fictício carregado.":"Riot ID selecionado. Este jogador não possui estatísticas no modo demonstração.");
 });
 byId("profile-card").addEventListener("click",event=>{
   const action=event.target.closest("button[data-profile-action]")?.dataset.profileAction;
@@ -247,8 +292,9 @@ byId("friend-list").addEventListener("click",event=>{
   if(!button) return;
   const id=button.dataset.id;
   try{
-    if(button.dataset.action==="select"){commit({...state,selected:id},"Perfil selecionado.");showSection("overview")}
+    if(button.dataset.action==="select"){showSection("overview");commit({...state,selected:id},"Perfil selecionado.")}
     if(button.dataset.action==="favorite") commit(toggleFavorite(state,id),"Favoritos atualizados.");
+    if(button.dataset.action==="add") commit(addFriend(state,id),"Jogador adicionado aos amigos.");
     if(button.dataset.action==="edit") setupEditing(id);
     if(button.dataset.action==="remove"){commit(removeFriend(state,id),"Amigo excluído.");if(editingFriend&&sameRiotId(editingFriend,id))resetEditing()}
   }catch(err){status(err.message,"error")}

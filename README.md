@@ -67,3 +67,10 @@ O workflow de qualidade salva capturas Playwright em 360, 390, 768, 1280 e 1600p
 ### Revisão visual de desktop (outubro de 2026)
 
 A auditoria foi ampliada para **48 capturas** em seis resoluções, incluindo **1366×645** para simular janelas de navegador com barras do sistema. Foram ajustados menu lateral fixo durante scroll, busca compacta nas páginas internas, galeria com navegação visível, estados vazios, importação e mensagens contextuais. Mais informações em `docs/QA_VISUAL.md`.
+
+
+## Descoberta e comparação melhoradas
+- Atalhos para três perfis demonstrativos sem digitar Riot ID.
+- Amigos e favoritos na mesma lista, inclusive favoritos que não foram adicionados como amigos, com busca e filtros.
+- Comparação destaca diferenças de taxa de vitória entre dois exemplos e sinaliza perfis sem estatísticas.
+- A aplicação continua local: preferências no navegador e nenhuma chamada obrigatória à API Riot.
